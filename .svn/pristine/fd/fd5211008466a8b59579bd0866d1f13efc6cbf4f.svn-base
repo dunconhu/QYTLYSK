@@ -1,0 +1,37 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title>404错误页面</title>
+    <meta name="description" content="这是一个 jsp页面">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/css/amazeui.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath }/css/app.css">
+    <script src="${pageContext.request.contextPath }/js/jquery.min.js"></script>
+</head>
+<body>
+<script src="${pageContext.request.contextPath }/js/theme.js"></script>
+      <div class="row-content am-cf">
+          <div class="widget am-cf">
+              <div class="widget-body">
+                  <div class="tpl-page-state">
+                      <div class="tpl-page-state-title am-text-center tpl-error-title">404</div>
+                      <div class="tpl-error-title-info">Page Not Found</div>
+                      <div class="tpl-page-state-content tpl-error-content">
+
+                          <p>对不起,没有找到您所需要的页面,可能是URL不确定,或者页面已被移除。</p>
+                          <button type="button" class="am-btn am-btn-secondary am-radius tpl-error-btn"  onclick="location.href='javascript:history.go(-1)'">返回上一页</button></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>用户列表</title>
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath }/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath }/themes/icon.css">
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/js/common/jquery.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/js/common/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath }/js/common/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<table id="dg"></table>
+
+	<script type="text/javascript">
+		$('#dg').datagrid({
+			url : '${pageContext.request.contextPath }/user/list',
+			columns : [ [ 
+				{field:'id',title:'用户ID',width:100}, 
+				{field:'loginName',title:'登录名',width:100}, 
+				{field:'realName',title:'真实姓名',width:100}, 
+				{field:'status',title:'用户状态',width:100}, 
+				{field:'createTime',title:'创建时间',width:100}
+			] ],
+			pagination:true
+		});
+        $('#dg').datagrid('getPager').pagination({  
+            pageSize: 10,  
+            pageNumber: 1,  
+            pageList: [10, 20, 30, 40, 50],
+            onSelectPage:function(pageIndex,pageSize){
+            	$('#dg').datagrid('load', {    
+            	    "pageIndex": pageIndex,    
+            	    "pageSize": pageSize   
+            	}); 
+            }
+       });
+	</script>
+</body>
+</html>

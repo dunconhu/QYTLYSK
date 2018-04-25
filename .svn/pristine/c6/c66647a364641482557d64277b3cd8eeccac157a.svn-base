@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qytkj.lysk.user_management.dao.UserDao">
+	<cache eviction="LRU" flushInterval="60000" />
+	
+	<!-- 1.根据id查询一个用户 -->
+	<select id="getById" resultType="user">
+		select 
+			id,
+			charAccount strLoginName,
+			intStatus strStatus,
+			charPassWord strPassword,
+			varcharName strRealName,
+			dateCreateTime
+		from ht_tbluser
+		where id=#{id}
+	</select>
+	<!-- 2.根据id删除一个用户 -->
+	<delete id="delById">
+		delete from ht_tbluser
+		where id=#{id}
+	</delete>
+	<!-- 3.动态修改一个用户信息 -->
+	<update id="update" parameterType="user">
+		update ht_tbluser
+		<set>
+			<if test="strLoginName!=null">
+				charAccount=#{strLoginName},
+			</if>
+			<if test="strPassword!=null">
+				charPassWord=#{strPassword},
+			</if>
+			<if test="intStatus!=null">
+				intStatus=#{intStatus},
+			</if>
+			<if test="strRealName!=null">
+				varcharName=#{strRealName}
+			</if>
+		</set>
+		where
+			id=#{id}
+	</update>
+	<!-- 4.添加一个用户 -->
+	<insert id="save" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+		insert into ht_tbluser(charAccount,charPassWord,varcharName,intStatus,dateCreateTime)
+		values(#{strLoginName},#{strPassword},#{strRealName},#{intStatus},#{dateCreateTime})
+	</insert>
+	
+	<!-- 5.根据分页信息和过滤条件查询用户 -->
+	<select id="findByPage" resultType="user">
+		select 
+			id,
+			charAccount strLoginName,
+			intStatus strStatus,
+			charPassWord strPassword,
+			varcharName strRealName,
+			dateCreateTime
+		from ht_tbluser
+		<if test="user!=null">
+			<where>
+				<if test="user.dateCreateTime!=null">
+					and date_format(dateCreateTime,'%Y-%m-%d')=date_format(#{user.dateCreateTime},'%Y-%m-%d')
+				</if>
+				<if test="user.strStatus!=null">
+					and intStatus=#{user.strStatus}
+				</if>
+				<if test="user.strLoginName!=null">
+					charAccount like CONCAT('%',#{user.strLoginName},'%') 
+				</if>
+				<if test="user.strRealName!=null">
+					and varcharName like CONCAT('%',#{user.strRealName},'%')
+				</if>
+			</where>
+		</if>
+		<if test="page!=null">
+			limit #{page.startNum},#{page.pageSize}
+		</if>
+	</select>
+	<!-- 6.根据过滤条件统计用户数量 -->
+	<select id="count" resultType="int">
+		select count(id) from ht_tbluser
+		<if test="user!=null">
+			<where>
+				<if test="user.dateCreateTime!=null">
+					and date_format(dateCreateTime,'%Y-%m-%d')=date_format(#{user.dateCreateTime},'%Y-%m-%d')
+				</if>
+				<if test="user.strStatus!=null">
+					and intStatus=#{user.strStatus}
+				</if>
+				<if test="user.strLoginName!=null">
+					charAccount like CONCAT('%',#{user.strLoginName},'%') 
+				</if>
+				<if test="user.strRealName!=null">
+					and varcharName like CONCAT('%',#{user.strRealName},'%')
+				</if>
+			</where> 
+		</if>
+	</select>
+	
+	<!-- 7.根据登录名和密码查询用户 -->
+	<select id="findUserByAccountAndPW" resultType="user">
+		select 
+			id,
+			charAccount strLoginName,
+			intStatus strStatus,
+			charPassWord strPassword,
+			varcharName strRealName,
+			dateCreateTime
+		from ht_tbluser
+		where charAccount = #{strLoginName} AND charPassWord = #{strPassword}
+	</select>
+</mapper>

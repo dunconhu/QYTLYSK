@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qytkj.lysk.user_management.dao.CAPPUserDao">
+	<cache eviction="LRU" flushInterval="60000" />
+	
+	<!-- 添加一个用户 -->
+	<insert id="addCAPPUser" parameterType="cAPPUser" useGeneratedKeys="true" keyProperty="id">
+		insert into yh_tbluser(chrAccount,chrPassword,intStatus,vchrNickname,dateCreateTime)
+		select #{strPhoneNum},#{strPassword},#{intStatus},#{strNickname},#{dateCreateTime}
+		where not exists(select chrAccount,chrPassword,intStatus,vchrNickname,dateCreateTime from yh_tbluser
+		where chrAccount = #{strPhoneNum});
+	</insert>
+	
+	<!-- 根据登录名和密码查询用户 -->
+	<select id="findUserByAccountAndPW" resultType="cAPPUser">
+		select 
+			id,
+			chrAccount,
+			intStatus,
+			chrPassword,
+			vchrNickname,
+			dateCreateTime
+		from yh_tbluser
+		where chrAccount = #{strLoginName} AND chrPassWord = #{strPassword}
+	</select>
+	
+</mapper>

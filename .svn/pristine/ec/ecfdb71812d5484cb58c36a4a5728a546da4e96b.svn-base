@@ -1,0 +1,62 @@
+package com.qytkj.lysk.user_management.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.qytkj.lysk.user_management.dao.UserDao;
+import com.qytkj.lysk.user_management.domain.User;
+import com.qytkj.lysk.user_management.service.UserService;
+@Service
+@Transactional(isolation=Isolation.DEFAULT,propagation=Propagation.REQUIRED)
+public class UserServiceImpl implements UserService{
+
+	@Autowired
+	private UserDao userDao;
+	@Override
+	@Transactional(readOnly=true)
+	public User findUserByAccountAndPW(String loginName, String pass) {
+		return userDao.findUserByAccountAndPW(loginName, pass);
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public User getById(int id) {
+		return userDao.getById(id);
+	}
+
+	@Override
+	public void delById(int id) {
+		userDao.delById(id);
+	}
+
+	@Override
+	public void update(User user) {
+		userDao.update(user);
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public int count(Map<String, Object> params) {
+		return userDao.count(params);
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public List<User> getByPage(Map<String, Object> params) {
+		
+		return userDao.findByPage(params);
+	}
+
+	@Override
+	public void save(User user) {
+		userDao.save(user);
+	}
+	
+
+}

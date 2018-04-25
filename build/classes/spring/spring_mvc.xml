@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+
+	<!-- 1. 启用springMVC默认组件 -->
+	<mvc:annotation-driven>
+		<!--enableMatrixVariables="true"> -->
+		<mvc:message-converters register-defaults="true">
+			<!-- StringHttpMessageConverter编码为UTF-8，防止乱码 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+				<property name="supportedMediaTypes">
+					<list>
+						<bean class="org.springframework.http.MediaType">
+							<constructor-arg index="0" value="text" />
+							<constructor-arg index="1" value="plain" />
+							<constructor-arg index="2" value="UTF-8" />
+						</bean>
+						<bean class="org.springframework.http.MediaType">
+							<constructor-arg index="0" value="*" />
+							<constructor-arg index="1" value="*" />
+							<constructor-arg index="2" value="UTF-8" />
+						</bean>
+					</list>
+				</property>
+			</bean>
+
+			<!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+			<bean
+				class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter"
+				id="fastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+				<!--<property name="serializerFeature"> -->
+				<!--这个地方加上这个功能吧，能自己配置一些东西，比如时间的格式化，null输出""等等 -->
+				<!--</property> -->
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- 2.扫描controller层 -->
+	<context:component-scan base-package="com.qytkj.lysk.*.controller" />
+	
+	<!-- 3.指定默认的servlet处理静态资源 -->
+	<mvc:default-servlet-handler />
+	
+	<!-- 4.指定一个视图解析器，把逻辑视图与物理视图进行匹配 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+		
+	<!-- 5.配置文件上传下载组件 -->
+	
+	<!-- 6.配置登录检查拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/404.html" />
+			<bean class="com.qytkj.lysk.user_management.interceptor.AuthorizedInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!--7. 配置json数据 -->  
+    <!-- <bean  class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">    
+        <property name="messageConverters">    
+            <list>    
+                <ref bean="mappingJackson2HttpMessageConverter" />    
+            </list>    
+        </property>    
+    </bean>    
+    <bean id="mappingJackson2HttpMessageConverter"   class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">    
+        <property name="supportedMediaTypes">    
+            <list>    
+                <value>text/html;charset=UTF-8</value>    
+                <value>text/json;charset=UTF-8</value>    
+                <value>application/json;charset=UTF-8</value>    
+            </list>    
+        </property>    
+    </bean> -->  
+    
+
+</beans>
